@@ -3,6 +3,7 @@ import { ArrowUpRight, Check, Copy, Github, Linkedin, Mail } from "lucide-react"
 import { profile } from "@/data/profile";
 import { OutlineButton, Section } from "./primitives";
 import { useReducedMotion } from "@/lib/portfolio";
+import { ContactForm } from "./ContactForm";
 
 export function Contact() {
   const [copied, setCopied] = useState(false);
@@ -93,6 +94,8 @@ export function Contact() {
           </div>
         </TiltCard>
       </div>
+
+      <ContactForm />
 
       <div className="mt-10 flex flex-wrap items-center gap-3">
         <OutlineButton onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>

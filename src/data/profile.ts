@@ -203,5 +203,6 @@ export const navItems = [
   { id: "projects", label: "PROJECTS" },
   { id: "research", label: "RESEARCH" },
   { id: "achievements", label: "ACHIEVEMENTS" },
+  { id: "resume", label: "RESUME" },
   { id: "contact", label: "CONTACT" },
 ] as const;

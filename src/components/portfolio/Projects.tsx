@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ArrowRight, Database, FileText, Folder, Server, Users, Workflow } from "lucide-react";
+import developerScene from "@/assets/scene-developer.png";
 import { Chip, GlassCard, Modal, OutlineButton, PrimaryButton, Section } from "./primitives";
 import { cn } from "@/lib/utils";
 
@@ -39,6 +40,17 @@ export function Projects() {
       title="THINGS I'VE BUILT"
       intro="Two projects from my academic and practical work."
     >
+      <div className="mb-10 flex justify-center">
+        <img
+          src={developerScene}
+          alt="Illustration of Suriya coding at a desk"
+          loading="lazy"
+          width={1024}
+          height={1024}
+          className="animate-float h-52 w-auto sm:h-64"
+        />
+      </div>
+
       <div className="grid gap-8 lg:grid-cols-2">
         {/* Project 1 */}
         <GlassCard as="article" className="flex flex-col p-6 sm:p-8">
