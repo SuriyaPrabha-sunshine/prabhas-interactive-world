@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Award, CalendarDays, Presentation, Trophy, Users } from "lucide-react";
 import { research } from "@/data/profile";
+import researcherScene from "@/assets/scene-researcher.png";
 import { GlassCard, Modal, PrimaryButton, Section } from "./primitives";
 import { useReducedMotion } from "@/lib/portfolio";
 import { cn } from "@/lib/utils";
@@ -34,6 +35,17 @@ export function Research() {
       title="CURIOUS BEYOND THE CODE"
       intro="Research • Exploration • Emerging Technology"
     >
+      <div className="mb-10 flex justify-center">
+        <img
+          src={researcherScene}
+          alt="Illustration of Suriya exploring research ideas"
+          loading="lazy"
+          width={1024}
+          height={1024}
+          className="animate-float h-52 w-auto sm:h-64"
+        />
+      </div>
+
       <div className="grid gap-8 lg:grid-cols-[1.15fr_1fr]">
         <GlassCard className="p-6 sm:p-8">
           <h3 className="text-lg leading-snug font-bold sm:text-xl">{research.title}</h3>

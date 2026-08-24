@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Code2, Database, FolderOpen, BarChart3, Laptop } from "lucide-react";
 import { profile, rotatingWords } from "@/data/profile";
-import profileAsset from "@/assets/profile.jpg.asset.json";
+import profileAsset from "@/assets/profile-avatar.png";
 import { scrollToId, useReducedMotion } from "@/lib/portfolio";
 import { OutlineButton, PrimaryButton } from "./primitives";
 import { LaptopOS } from "./LaptopOS";
@@ -60,7 +60,7 @@ export function Hero() {
                 style={{ background: "var(--gradient-hero)" }}
               />
               <img
-                src={profileAsset.url}
+                src={profileAsset}
                 alt={`${profile.name} — ${profile.role}`}
                 className="relative h-20 w-20 rounded-full border-2 border-white/70 object-cover shadow-[var(--shadow-lift)] sm:h-24 sm:w-24"
                 style={{ objectPosition: "center 28%" }}

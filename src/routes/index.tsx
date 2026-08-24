@@ -11,7 +11,9 @@ import { Experience } from "@/components/portfolio/Experience";
 import { Projects } from "@/components/portfolio/Projects";
 import { Research } from "@/components/portfolio/Research";
 import { Achievements } from "@/components/portfolio/Achievements";
+import { Resume } from "@/components/portfolio/Resume";
 import { Contact } from "@/components/portfolio/Contact";
+import { Chatbot } from "@/components/portfolio/Chatbot";
 import { profile } from "@/data/profile";
 
 const title = "Suriya Prabha — MCA Student | Web Development, Design & Research";
@@ -48,8 +50,10 @@ function Index() {
         <Projects />
         <Research />
         <Achievements />
+        <Resume />
         <Contact />
       </main>
+      <Chatbot />
       <footer className="border-t px-5 py-8 text-center sm:px-8">
         <p className="text-muted-foreground font-mono text-[10px] tracking-[0.22em]">
           {profile.name.toUpperCase()} • I LEARN → I BUILD → I DESIGN → I RESEARCH → I CONTRIBUTE →
