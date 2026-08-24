@@ -9,7 +9,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { profile, values } from "@/data/profile";
-import profileAsset from "@/assets/profile.jpg.asset.json";
+import profileAsset from "@/assets/profile-avatar.png";
 import { GlassCard, Section, OutlineButton } from "./primitives";
 import { cn } from "@/lib/utils";
 import { useTilt } from "@/lib/tilt";
@@ -69,7 +69,7 @@ export function About() {
                     style={{ background: "var(--gradient-hero)" }}
                   />
                   <img
-                    src={profileAsset.url}
+                    src={profileAsset}
                     alt={profile.name}
                     className="relative h-24 w-24 rounded-[1.25rem] border-2 border-white/70 object-cover shadow-[var(--shadow-lift)] sm:h-28 sm:w-28"
                     style={{ objectPosition: "center 30%" }}
