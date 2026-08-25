@@ -78,6 +78,7 @@ export const sendContactMessage = createServerFn({ method: "POST" })
       email: data.email,
       subject: data.subject || null,
       message: data.message,
+      ip_hash: ipHash,
     });
 
     if (error) {

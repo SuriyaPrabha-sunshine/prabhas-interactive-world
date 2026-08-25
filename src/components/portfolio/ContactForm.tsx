@@ -10,6 +10,8 @@ type Errors = Partial<Record<"name" | "email" | "message", string>>;
 export function ContactForm() {
   const submit = useServerFn(sendContactMessage);
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  // Honeypot: bots fill it, humans never see it.
+  const [website, setWebsite] = useState("");
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [serverError, setServerError] = useState<string | null>(null);
