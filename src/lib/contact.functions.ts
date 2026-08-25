@@ -36,6 +36,10 @@ function looksLikeSpam(subject: string, message: string) {
 export const sendContactMessage = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => ContactInput.parse(input))
   .handler(async ({ data }) => {
+    // Honeypot / content heuristics: silently accept so bots don't retry.
+    if (data.website.trim() || looksLikeSpam(data.subject, data.message)) {
+      return { ok: true as const };
+    }
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -44,6 +48,15 @@ export const sendContactMessage = createServerFn({ method: "POST" })
       getRequestHeader("x-forwarded-for")?.split(",")[0]?.trim() ??
       "unknown";
     const ipHash = await hashIp(ip);
+
+    // Burst limiter before touching the database.
+    if (!checkRateLimit(`contact:${ipHash}`, 5, 10 * 60 * 1000).allowed) {
+      return {
+        ok: false as const,
+        error: "Too many messages sent just now. Please try again in a few minutes.",
+      };
+    }
+
 
     // Basic spam protection: max 3 messages per 10 minutes per sender.
     const since = new Date(Date.now() - 10 * 60 * 1000).toISOString();
