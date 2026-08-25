@@ -10,7 +10,37 @@ const ContactInput = z.object({
   message: z.string().trim().min(10).max(2000),
   /** Honeypot: real visitors never fill this hidden field. */
   website: z.string().max(200).optional().default(""),
+  /** Google reCAPTCHA v3 token (empty when CAPTCHA is not configured). */
+  captchaToken: z.string().max(4000).optional().default(""),
 });
+
+/**
+ * Verifies a reCAPTCHA v3 token server-side.
+ * Returns true when CAPTCHA is not configured (RECAPTCHA_SECRET_KEY unset),
+ * so the form keeps working until keys are added.
+ */
+async function verifyCaptcha(token: string, ip: string) {
+  const secret = process.env['RECAPTCHA_SECRET_KEY'];
+  if (!secret) return true;
+  if (!token) return false;
+  try {
+    const body = new URLSearchParams({ secret, response: token });
+    if (ip && ip !== "unknown") body.set("remoteip", ip);
+    const res = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+      method: "POST",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      body,
+    });
+    const result = (await res.json()) as { success?: boolean; score?: number; action?: string };
+    if (!result.success) return false;
+    // v3 returns a 0..1 score; below 0.5 is very likely automated.
+    return (result.score ?? 0) >= 0.5;
+  } catch (error) {
+    console.error("recaptcha verify failed", error instanceof Error ? error.message : "unknown");
+    // Fail closed on verification outage to keep bots out.
+    return false;
+  }
+}
 
 async function hashIp(ip: string) {
   const bytes = new TextEncoder().encode(`portfolio-contact:${ip}`);
@@ -48,6 +78,13 @@ export const sendContactMessage = createServerFn({ method: "POST" })
       getRequestHeader("x-forwarded-for")?.split(",")[0]?.trim() ??
       "unknown";
     const ipHash = await hashIp(ip);
+
+    if (!(await verifyCaptcha(data.captchaToken, ip))) {
+      return {
+        ok: false as const,
+        error: "We couldn't verify that you're human. Please reload the page and try again.",
+      };
+    }
 
     // Burst limiter before touching the database.
     if (!checkRateLimit(`contact:${ipHash}`, 5, 10 * 60 * 1000).allowed) {

@@ -4,6 +4,7 @@ import { ArrowRight, Check, Loader2 } from "lucide-react";
 import { sendContactMessage } from "@/lib/contact.functions";
 import { GlassCard } from "./primitives";
 import welcomeScene from "@/assets/scene-welcome.png";
+import { getRecaptchaToken, recaptchaEnabled } from "@/lib/recaptcha";
 
 type Errors = Partial<Record<"name" | "email" | "message", string>>;
 
@@ -33,6 +34,7 @@ export function ContactForm() {
     if (!validate()) return;
     setStatus("sending");
     try {
+      const captchaToken = await getRecaptchaToken("contact_form");
       const res = await submit({
         data: {
           name: form.name.trim(),
@@ -40,6 +42,7 @@ export function ContactForm() {
           subject: form.subject.trim(),
           message: form.message.trim(),
           website,
+          captchaToken,
         },
       });
       if (res.ok) {
@@ -163,6 +166,29 @@ export function ContactForm() {
               />
             </Field>
             {serverError ? <p className="text-destructive text-sm">{serverError}</p> : null}
+            {recaptchaEnabled ? (
+              <p className="text-muted-foreground text-[11px]">
+                Protected by reCAPTCHA —{" "}
+                <a
+                  href="https://policies.google.com/privacy"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline"
+                >
+                  Privacy
+                </a>{" "}
+                &amp;{" "}
+                <a
+                  href="https://policies.google.com/terms"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline"
+                >
+                  Terms
+                </a>
+                .
+              </p>
+            ) : null}
             <button
               type="submit"
               disabled={status === "sending"}
