@@ -115,6 +115,16 @@ export function ContactForm() {
         ) : (
           <form onSubmit={onSubmit} noValidate className="space-y-4">
             <h3 className="text-lg font-bold">Send me a message</h3>
+            <input
+              type="text"
+              name="website"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="pointer-events-none absolute -left-[9999px] h-0 w-0 opacity-0"
+            />
             <Field label="Name" error={errors.name}>
               <input
                 value={form.name}
