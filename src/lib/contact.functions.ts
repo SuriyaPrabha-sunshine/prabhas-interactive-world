@@ -1,12 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeader } from "@tanstack/react-start/server";
 import { z } from "zod";
+import { checkRateLimit } from "@/lib/rate-limit.server";
 
 const ContactInput = z.object({
   name: z.string().trim().min(2).max(80),
   email: z.string().trim().email().max(160),
   subject: z.string().trim().max(140).optional().default(""),
   message: z.string().trim().min(10).max(2000),
+  /** Honeypot: real visitors never fill this hidden field. */
+  website: z.string().max(200).optional().default(""),
 });
 
 async function hashIp(ip: string) {
@@ -18,9 +21,22 @@ async function hashIp(ip: string) {
     .slice(0, 32);
 }
 
+/** Heuristics for classic link/bot spam. */
+function looksLikeSpam(subject: string, message: string) {
+  const text = `${subject}\n${message}`;
+  const links = (text.match(/https?:\/\/|www\.|\[url|\bbit\.ly\b/gi) ?? []).length;
+  if (links >= 3) return true;
+  if (/\b(viagra|casino|crypto giveaway|seo services|loan offer|forex signals)\b/i.test(text))
+    return true;
+  // Mostly-uppercase shouting with links, or no letters at all.
+  if (!/[a-z]/i.test(message)) return true;
+  return false;
+}
+
 export const sendContactMessage = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => ContactInput.parse(input))
   .handler(async ({ data }) => {
+
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const ip =
