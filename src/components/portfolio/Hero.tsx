@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Code2, Database, FolderOpen, BarChart3, Laptop } from "lucide-react";
 import { profile, rotatingWords } from "@/data/profile";
-import profileAsset from "@/assets/profile-avatar.png";
+import profileAsset from "@/assets/suriya-photo.jpg";
 import { scrollToId, useReducedMotion } from "@/lib/portfolio";
 import { OutlineButton, PrimaryButton } from "./primitives";
 import { LaptopOS } from "./LaptopOS";

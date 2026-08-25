@@ -9,7 +9,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { profile, values } from "@/data/profile";
-import profileAsset from "@/assets/profile-avatar.png";
+import profileAsset from "@/assets/suriya-photo.jpg";
 import { GlassCard, Section, OutlineButton } from "./primitives";
 import { cn } from "@/lib/utils";
 import { useTilt } from "@/lib/tilt";

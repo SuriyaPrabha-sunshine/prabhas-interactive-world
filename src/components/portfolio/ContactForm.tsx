@@ -10,6 +10,8 @@ type Errors = Partial<Record<"name" | "email" | "message", string>>;
 export function ContactForm() {
   const submit = useServerFn(sendContactMessage);
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  // Honeypot: bots fill it, humans never see it.
+  const [website, setWebsite] = useState("");
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [serverError, setServerError] = useState<string | null>(null);
@@ -37,6 +39,7 @@ export function ContactForm() {
           email: form.email.trim(),
           subject: form.subject.trim(),
           message: form.message.trim(),
+          website,
         },
       });
       if (res.ok) {
@@ -112,6 +115,16 @@ export function ContactForm() {
         ) : (
           <form onSubmit={onSubmit} noValidate className="space-y-4">
             <h3 className="text-lg font-bold">Send me a message</h3>
+            <input
+              type="text"
+              name="website"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="pointer-events-none absolute -left-[9999px] h-0 w-0 opacity-0"
+            />
             <Field label="Name" error={errors.name}>
               <input
                 value={form.name}
