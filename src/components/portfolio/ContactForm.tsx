@@ -6,7 +6,7 @@ import { GlassCard } from "./primitives";
 import welcomeScene from "@/assets/scene-welcome.png";
 import { getRecaptchaToken, recaptchaEnabled } from "@/lib/recaptcha";
 
-type Errors = Partial<Record<"name" | "email" | "message", string>>;
+type Errors = Partial<Record<"name" | "email" | "subject" | "message", string>>;
 
 export function ContactForm() {
   const submit = useServerFn(sendContactMessage);
@@ -23,6 +23,7 @@ export function ContactForm() {
     if (form.name.trim().length < 2) next.name = "Please tell me your name.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.email.trim()))
       next.email = "Please enter a valid email address.";
+    if (form.subject.trim().length < 2) next.subject = "Please enter a subject.";
     if (form.message.trim().length < 10) next.message = "Please write at least 10 characters.";
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -97,7 +98,7 @@ export function ContactForm() {
             <h3 className="font-display mt-5 text-2xl font-extrabold">MESSAGE SENT ✓</h3>
             <p className="mt-2 font-semibold">Thank you, {sentName}!</p>
             <p className="text-muted-foreground mt-1 text-sm">
-              Your message has reached Suriya successfully.
+              Message sent successfully! Thank you for reaching out.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <button
@@ -147,11 +148,12 @@ export function ContactForm() {
                 className="input-base"
               />
             </Field>
-            <Field label="Subject">
+            <Field label="Subject" error={errors.subject}>
               <input
                 value={form.subject}
                 onChange={(e) => setForm({ ...form, subject: e.target.value })}
                 maxLength={140}
+                required
                 className="input-base"
               />
             </Field>
@@ -201,7 +203,7 @@ export function ContactForm() {
               ) : (
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               )}
-              SEND MESSAGE
+              {status === "sending" ? "Sending..." : "SEND MESSAGE"}
             </button>
           </form>
         )}
