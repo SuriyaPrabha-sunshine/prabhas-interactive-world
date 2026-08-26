@@ -3,6 +3,10 @@ import { getRequestHeader } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { checkRateLimit } from "@/lib/rate-limit.server";
 
+/** Portfolio owner's inbox — contact notifications are delivered here. */
+export const OWNER_NOTIFICATION_EMAIL = "suriyaprabha30boopalan@gmail.com";
+
+
 const ContactInput = z.object({
   name: z.string().trim().min(2).max(80),
   email: z.string().trim().email().max(160),
