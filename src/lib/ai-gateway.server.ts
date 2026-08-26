@@ -1,9 +1,14 @@
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 
-export function createLovableAiGatewayProvider(apiKey: string) {
+/**
+ * Google Gemini via its official OpenAI-compatible endpoint.
+ * Docs: https://ai.google.dev/gemini-api/docs/openai
+ * Get a free API key at https://aistudio.google.com/apikey
+ */
+export function createGeminiProvider(apiKey: string) {
   return createOpenAICompatible({
-    name: "lovable",
-    baseURL: "https://ai.gateway.lovable.dev/v1",
-    headers: { "Lovable-API-Key": apiKey },
+    name: "gemini",
+    baseURL: "https://generativelanguage.googleapis.com/v1beta/openai",
+    headers: { Authorization: `Bearer ${apiKey}` },
   });
 }
