@@ -3,7 +3,7 @@ import { getRequestHeader } from "@tanstack/react-start/server";
 import { generateText } from "ai";
 import { z } from "zod";
 import { buildSystemPrompt } from "@/lib/suriya-knowledge";
-import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
+import { createGeminiProvider } from "@/lib/ai-gateway.server";
 import { checkRateLimit } from "@/lib/rate-limit.server";
 
 const ChatInput = z.object({
@@ -70,14 +70,14 @@ export const askSuriyaAi = createServerFn({ method: "POST" })
       return { ok: true as const, text: REFUSAL };
     }
 
-    const key = process.env["LOVABLE_API_KEY"];
+    const key = process.env["GEMINI_API_KEY"];
     if (!key) return { ok: false as const, error: "The assistant is not configured yet." };
 
-    const gateway = createLovableAiGatewayProvider(key);
+    const gateway = createGeminiProvider(key);
 
     try {
       const result = await generateText({
-        model: gateway("google/gemini-3.7-flash"),
+        model: gateway("gemini-3.7-flash"),
         system: buildSystemPrompt(),
         // Only user/assistant turns are forwarded; the system prompt is never user-editable.
         messages,
