@@ -82,7 +82,7 @@ export const askSuriyaAi = createServerFn({ method: "POST" })
         // Only user/assistant turns are forwarded; the system prompt is never user-editable.
         messages,
         maxOutputTokens: 500,
-        temperature: 0.4,
+       
       });
       let text = (await result.text).trim();
 
